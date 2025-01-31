@@ -2,22 +2,45 @@
   "firstname": "Ralph",
   "middlename": null,
   "lastname": "Bolliger",
-  "dob": "1984-01-31T00:00:00+0200",
-  "nationality": "Swiss",
-  "phoneNumber": {
-    "mobile": "+41797518370",
-    "landline": null
-  },
-  "email": {
-    "primary": "ralph.bolliger@me.com",
-    "secondary": null
-  },
-  "website": "https://ralphbolliger.ch",
+  "dob": "1984-01-31T00:00:00+0100",
+  "citizenships": ["Swiss"],
+  "phone": [
+    {
+      "label": "personal mobile",
+      "number": "+41797518370"
+    }
+  ],
+  "email": [
+    {
+      "label": "private",
+      "address": "ralph.bolliger@me.com"
+    },
+    {
+      "label": "business",
+      "address": "ralph.bolliger@orbisag.ch"
+    }
+  ],
+  "gpgPublicKey": "-----BEGIN PGP PUBLIC KEY BLOCK-----mDMEZ5zrnBYJKwYBBAHaRw8BAQdAJ+aGxNTt+WE6iKPrXpe/4f8vsSMyxEUqz+dyUd6+vW+0GERhcmsgU3RhciA8ZGFya0BzdGFyLmlvPoiTBBMWCgA7FiEEjIkDWKWw6POK1An/LgKlXSCBCQkFAmec65wCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQLgKlXSCBCQnGGwEAodDyeLGaBtZfffP2lG6VZyyjgkz+sXZYYztqwyEHZJAA/3F8mNGwXQcfxIHNUWhzMg8RUf/MtXARcXgl2lzpSiAIuDgEZ5zrnBIKKwYBBAGXVQEFAQEHQA14fCQlzgwHv/d+S2zO/bWZrmH2mO25AxFO3O0AvJpMAwEIB4h4BBgWCgAgFiEEjIkDWKWw6POK1An/LgKlXSCBCQkFAmec65wCGwwACgkQLgKlXSCBCQkWGAD/RAp2Oo5UlK/9tVMqSlR8j2YxDZLHF3ReS3hxRRBGnbEBAIwO3HN88GqC0aSD2pQmt3nIaICzl+jD+MUZnEPseqkP=EhZt-----END PGP PUBLIC KEY BLOCK-----",
+  "links": [
+    {
+      "name": "X",
+      "url": "https://x.com/____darkstar"
+    },
+    {
+      "name": "persönliche Website",
+      "url": "https://ralphbolliger.ch"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/echo-gravitas"
+    }
+  ],
   "biologicalGender": "male",
+  "mbpt": "INFJ-T",
   "genderIdentity": "cisgender",
   "pronouns": "he/him",
   "siblings": 2,
-  "children": null,
+  "children": 0,
   "bloodType": "A+",
   "spokenLanguages": [
     { "language": "German", "level": "native" },
@@ -63,8 +86,8 @@
       "employer": "MONTAG digital GmbH",
       "position": "Product Designer UI/UX & Founder",
       "from": "2015-06-01T00:00:00+0200",
-      "to": "2022-04-30T00:00:00+0200",
-      "current": false
+      "to": null,
+      "current": true
     },
     {
       "employer": "xtendx AG",
