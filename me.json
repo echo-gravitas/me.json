@@ -20,7 +20,8 @@
       "address": "ralph.bolliger@orbisag.ch"
     }
   ],
-  "gpgPublicKey": "-----BEGIN PGP PUBLIC KEY BLOCK-----mDMEZ5zrnBYJKwYBBAHaRw8BAQdAJ+aGxNTt+WE6iKPrXpe/4f8vsSMyxEUqz+dyUd6+vW+0GERhcmsgU3RhciA8ZGFya0BzdGFyLmlvPoiTBBMWCgA7FiEEjIkDWKWw6POK1An/LgKlXSCBCQkFAmec65wCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQLgKlXSCBCQnGGwEAodDyeLGaBtZfffP2lG6VZyyjgkz+sXZYYztqwyEHZJAA/3F8mNGwXQcfxIHNUWhzMg8RUf/MtXARcXgl2lzpSiAIuDgEZ5zrnBIKKwYBBAGXVQEFAQEHQA14fCQlzgwHv/d+S2zO/bWZrmH2mO25AxFO3O0AvJpMAwEIB4h4BBgWCgAgFiEEjIkDWKWw6POK1An/LgKlXSCBCQkFAmec65wCGwwACgkQLgKlXSCBCQkWGAD/RAp2Oo5UlK/9tVMqSlR8j2YxDZLHF3ReS3hxRRBGnbEBAIwO3HN88GqC0aSD2pQmt3nIaICzl+jD+MUZnEPseqkP=EhZt-----END PGP PUBLIC KEY BLOCK-----",
+  "openGPGkeyUrl": "https://keys.openpgp.org/vks/v1/by-fingerprint/8C890358A5B0E8F38AD409FF2E02A55D20810909",
+  "gravatarUrl": "https://gravatar.com/avatar/02670c6bb6015366e47e89df63afb13223c21a007a60216caa2efe84a0c4f3de?s=512",
   "links": [
     {
       "name": "X",
