@@ -1,7 +1,7 @@
 {
-  "firstname": "Ralph",
-  "middlename": null,
-  "lastname": "Bolliger",
+  "firstName": "Ralph",
+  "middleName": null,
+  "lastName": "Bolliger",
   "dob": "1984-01-31T00:00:00+0100",
   "citizenships": ["Swiss"],
   "phone": [
@@ -20,7 +20,7 @@
       "address": "ralph.bolliger@orbisag.ch"
     }
   ],
-  "openGPGkeyUrl": "https://keys.openpgp.org/vks/v1/by-fingerprint/8C890358A5B0E8F38AD409FF2E02A55D20810909",
+  "openGPGKeyUrl": "https://keys.openpgp.org/vks/v1/by-fingerprint/8C890358A5B0E8F38AD409FF2E02A55D20810909",
   "gravatarUrl": "https://gravatar.com/avatar/02670c6bb6015366e47e89df63afb13223c21a007a60216caa2efe84a0c4f3de?s=512",
   "links": [
     {

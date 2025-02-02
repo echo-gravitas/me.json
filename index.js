@@ -18,6 +18,20 @@ app.use(
   })
 );
 
+app.get('/:id/:key?', async (req, res) => {
+  const { key } = req.params;
+
+  try {
+    const data = await jsonfile.readFile(JSON_FILE);
+    if (!key) return res.json(data);
+    return data[key] !== undefined
+      ? res.json({ [key]: data[key] })
+      : res.status(404).json({ error: 'Key not found' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error reading JSON file' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(
     `🚀 API is running on http://localhost:${process.env.PORT} in ${process.env.NODE_ENV} mode`
