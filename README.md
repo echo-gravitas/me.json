@@ -23,6 +23,22 @@ The file contains information such as:
 - 🎶 **Favorite Music, Movies & Games**
 - 🔗 **Online Profiles & Personal Links**
 
+## ⚙️ Environment Configuration
+
+To run this application successfully, you need to create two `.env` files with the appropriate content:
+
+1. **.env.development** – for development mode
+2. **.env.production** – for production mode
+
+Each file should contain the following environment variables:
+
+```
+PORT=3000
+NODE_ENV=development  # or 'production' depending on the environment
+```
+
+Other variables may be required depending on additional configurations. Ensure all required values are set correctly before running the application.
+
 ## 🚀 Future Vision
 
 The goal of **me.json** is to define a flexible and open standard that can be easily extended. In the long run, it could be used for **automated profile generation**, **personal assistants**, or **self-managed digital identities**.
@@ -30,3 +46,4 @@ The goal of **me.json** is to define a flexible and open standard that can be ea
 ## 📜 License
 
 This project is released under the [MIT License](LICENSE), allowing you to freely use, modify, and further develop it.
+
