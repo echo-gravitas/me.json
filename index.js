@@ -26,21 +26,17 @@ app.use(
   })
 );
 
-// Root
-
 app.get('/', async (_req, res) => {
   try {
+    console.log(`❌ Bad request, no user ID provided.`);
     res.status(400).json({
       error: 'Bad Request',
       details: 'Please provide a user ID at least.',
     });
-    console.log(`🔥 Bad request, no user ID provided.`);
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
   }
 });
-
-// Get the JSON file
 
 app.get('/:id', async (req, res) => {
   try {
@@ -49,37 +45,45 @@ app.get('/:id', async (req, res) => {
     const result = await pool.query(query, [id]);
 
     if (result.rows.length === 0) {
+      console.log(`❌ Data for non-existing user with ID ${id} requested.`);
       return res
         .status(404)
         .json({ error: `A user with ID ${id} does not exist.` });
     }
 
-    res.json(result.rows[0].data);
     console.log(`🔥 Data for user with ID ${id} requested.`);
+    res.json(result.rows[0].data);
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
   }
 });
 
-// Get specific value of a user JSON
-
 app.get('/:id/:key', async (req, res) => {
   try {
     const { id, key } = req.params;
-    const query = 'SELECT data->$1 AS value FROM users WHERE id = $2';
-    const result = await pool.query(query, [key, id]);
 
-    if (result.rows.length === 0) {
+    const existsQuery =
+      'SELECT jsonb_exists(data, $1) AS key_exists FROM users WHERE id = $2';
+    const existsResult = await pool.query(existsQuery, [key, id]);
+
+    if (existsResult.rows.length === 0) {
+      console.log(`❌ Data for non-existing user with ID ${id} requested.`);
       return res
         .status(404)
         .json({ error: `A user with ID ${id} does not exist.` });
     }
 
-    if (result.rows[0].value === null) {
+    if (!existsResult.rows[0].key_exists) {
+      console.log(
+        `❌ Non-existing key ${key} for user with ID ${id} requested.`
+      );
       return res
         .status(404)
         .json({ error: `Key '${key}' not found for user ${id}.` });
     }
+
+    const query = 'SELECT data->$1 AS value FROM users WHERE id = $2';
+    const result = await pool.query(query, [key, id]);
 
     res.json({ [key]: result.rows[0].value });
     console.log(`🔥 ${key} for user with ID ${id} requested.`);
