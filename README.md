@@ -12,11 +12,11 @@ Today, personal information is scattered across various platforms – from socia
 - **Automated Profiles**: Use the data for websites, APIs, or other digital platforms.
 - **Backup & Portability**: Keep your information up-to-date and transportable, independent of specific services.
 
-## 📖 What’s Included in me.json?
+## 📚 What’s Included in me.json?
 
 The file contains information such as:
 
-- 🏷 **Name & Contact Info** (Email, Phone Number)
+- 🌿 **Name & Contact Info** (Email, Phone Number)
 - 🌍 **Citizenship & Location**
 - 🏢 **Professional Background & Memberships**
 - 🎨 **Hobbies & Interests**
@@ -25,25 +25,76 @@ The file contains information such as:
 
 ## ⚙️ Environment Configuration
 
-To run this application successfully, you need to create two `.env` files with the appropriate content:
-
-1. **.env.development** – for development mode
-2. **.env.production** – for production mode
-
-Each file should contain the following environment variables:
+To run this application successfully, create a `.env` file with the following environment variables:
 
 ```
 PORT=3000
 NODE_ENV=development  # or 'production' depending on the environment
+DB_USER=your_database_user
+DB_HOST=your_database_host
+DB_NAME=your_database_name
+DB_PASSWORD=your_database_password
+DB_PORT=your_database_port
 ```
 
-Other variables may be required depending on additional configurations. Ensure all required values are set correctly before running the application.
+Ensure all required values are set correctly before running the application.
+
+## 📼 API Endpoints
+
+The **me.json** API provides the following endpoints to interact with user data:
+
+### 🔍 Get User Data
+
+**GET /**
+
+- Returns an error if no user ID is provided.
+- Example Response:
+  ```json
+  {
+    "error": "Bad Request",
+    "details": "Please provide a user ID at least."
+  }
+  ```
+
+**GET /:id**
+
+- Retrieves the entire dataset for the specified user ID.
+- Example Request:
+  ```sh
+  curl -X GET http://localhost:3000/123
+  ```
+- Example Response:
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+  }
+  ```
+
+**GET /:id/:key**
+
+- Retrieves a specific data field for the given user ID.
+- Example Request:
+  ```sh
+  curl -X GET http://localhost:3000/123/email
+  ```
+- Example Response:
+  ```json
+  {
+    "email": "john.doe@example.com"
+  }
+  ```
+- If the key does not exist, returns an error:
+  ```json
+  {
+    "error": "Key 'email' not found for user 123."
+  }
+  ```
 
 ## 🚀 Future Vision
 
 The goal of **me.json** is to define a flexible and open standard that can be easily extended. In the long run, it could be used for **automated profile generation**, **personal assistants**, or **self-managed digital identities**.
 
-## 📜 License
+## 🐟 License
 
 This project is released under the [MIT License](LICENSE), allowing you to freely use, modify, and further develop it.
-
