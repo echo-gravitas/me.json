@@ -3,7 +3,4 @@ node_modules
 *.code-workspace
 
 # Ignore environment files
-.env
-.env.local
-.env.development
-.env.production
+.env*
