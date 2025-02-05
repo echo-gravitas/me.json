@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import pkg from 'pg';
 
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+dotenv.config({ path: '.env' });
 
 const app = express();
 const PORT = process.env.PORT;
@@ -26,9 +26,13 @@ app.use(
   })
 );
 
-app.get('/', async (_req, res) => {
+/**
+ * Root route
+ */
+
+app.get('/', async (req, res) => {
   try {
-    console.log(`❌ Bad request, no user ID provided.`);
+    console.log(`❌ (${req.ip}): Bad request, no user ID provided.`);
     res.status(400).json({
       error: 'Bad Request',
       details: 'Please provide a user ID at least.',
@@ -38,6 +42,29 @@ app.get('/', async (_req, res) => {
   }
 });
 
+/**
+ * Get and display all user IDs in the database
+ */
+
+app.get('/users', async (req, res) => {
+  try {
+    const query = 'SELECT id FROM users';
+    const result = await pool.query(query);
+
+    const userIDs = result.rows.map((row) => row.id);
+
+    console.log(`🔥 (${req.ip}): Retrieved all user IDs.`);
+    res.json({ userIDs });
+  } catch {
+    console.error(`❌ Database error: ${error.message}`);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
+});
+
+/**
+ * Get JSON data for a specific user
+ */
+
 app.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -45,18 +72,24 @@ app.get('/:id', async (req, res) => {
     const result = await pool.query(query, [id]);
 
     if (result.rows.length === 0) {
-      console.log(`❌ Data for non-existing user with ID ${id} requested.`);
+      console.log(
+        `❌ (${req.ip}): Data for non-existing user with ID ${id} requested.`
+      );
       return res
         .status(404)
         .json({ error: `A user with ID ${id} does not exist.` });
     }
 
-    console.log(`🔥 Data for user with ID ${id} requested.`);
+    console.log(`🔥 (${req.ip}): Data for user with ID ${id} requested.`);
     res.json(result.rows[0].data);
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
   }
 });
+
+/**
+ * Get a specific key/value pair for a given user ID
+ */
 
 app.get('/:id/:key', async (req, res) => {
   try {
@@ -67,7 +100,9 @@ app.get('/:id/:key', async (req, res) => {
     const existsResult = await pool.query(existsQuery, [key, id]);
 
     if (existsResult.rows.length === 0) {
-      console.log(`❌ Data for non-existing user with ID ${id} requested.`);
+      console.log(
+        `❌ (${req.ip}): Data for non-existing user with ID ${id} requested.`
+      );
       return res
         .status(404)
         .json({ error: `A user with ID ${id} does not exist.` });
@@ -75,7 +110,7 @@ app.get('/:id/:key', async (req, res) => {
 
     if (!existsResult.rows[0].key_exists) {
       console.log(
-        `❌ Non-existing key ${key} for user with ID ${id} requested.`
+        `❌ (${req.ip}): Non-existing key ${key} for user with ID ${id} requested.`
       );
       return res
         .status(404)
@@ -86,11 +121,15 @@ app.get('/:id/:key', async (req, res) => {
     const result = await pool.query(query, [key, id]);
 
     res.json({ [key]: result.rows[0].value });
-    console.log(`🔥 ${key} for user with ID ${id} requested.`);
+    console.log(`🔥 (${req.ip}): ${key} for user with ID ${id} requested.`);
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
   }
 });
+
+/**
+ * Start server and listen to a port
+ */
 
 app.listen(PORT, () => {
   console.log(
