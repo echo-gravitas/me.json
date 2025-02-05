@@ -32,10 +32,11 @@ app.use(
 
 app.get('/', async (req, res) => {
   try {
-    console.log(`❌ (${req.ip}): Bad request, no user ID provided.`);
+    console.log(`❌ (${req.ip}) has not provided a user ID.`);
     res.status(400).json({
       error: 'Bad Request',
-      details: 'Please provide a user ID at least.',
+      details:
+        'Please provide a user ID at least. Or request /users to get a list of all available user IDs.',
     });
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
@@ -53,7 +54,7 @@ app.get('/users', async (req, res) => {
 
     const userIDs = result.rows.map((row) => row.id);
 
-    console.log(`🔥 (${req.ip}): Retrieved all user IDs.`);
+    console.log(`🔥 (${req.ip}) requested a list of all available user IDs.`);
     res.json({ userIDs });
   } catch {
     console.error(`❌ Database error: ${error.message}`);
@@ -73,14 +74,16 @@ app.get('/:id', async (req, res) => {
 
     if (result.rows.length === 0) {
       console.log(
-        `❌ (${req.ip}): Data for non-existing user with ID ${id} requested.`
+        `❌ (${req.ip}): requested data for a non-existing user with ID ${id}.`
       );
       return res
         .status(404)
-        .json({ error: `A user with ID ${id} does not exist.` });
+        .json({ error: `The user with ID ${id} does not exist.` });
     }
 
-    console.log(`🔥 (${req.ip}): Data for user with ID ${id} requested.`);
+    console.log(
+      `🔥 (${req.ip}) requested the dataset for the user with ID ${id}.`
+    );
     res.json(result.rows[0].data);
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
@@ -101,27 +104,27 @@ app.get('/:id/:key', async (req, res) => {
 
     if (existsResult.rows.length === 0) {
       console.log(
-        `❌ (${req.ip}): Data for non-existing user with ID ${id} requested.`
+        `❌ (${req.ip}) requested data for a non-existing user with ID ${id}.`
       );
       return res
         .status(404)
-        .json({ error: `A user with ID ${id} does not exist.` });
+        .json({ error: `The user with ID ${id} does not exist.` });
     }
 
     if (!existsResult.rows[0].key_exists) {
       console.log(
-        `❌ (${req.ip}): Non-existing key ${key} for user with ID ${id} requested.`
+        `❌ (${req.ip}) requested the non-existing key '${key}' for the user with ID ${id}.`
       );
-      return res
-        .status(404)
-        .json({ error: `Key '${key}' not found for user ${id}.` });
+      return res.status(404).json({
+        error: `The key '${key}' doesn't exist in the dataset of user ${id}.`,
+      });
     }
 
     const query = 'SELECT data->$1 AS value FROM users WHERE id = $2';
     const result = await pool.query(query, [key, id]);
 
     res.json({ [key]: result.rows[0].value });
-    console.log(`🔥 (${req.ip}): ${key} for user with ID ${id} requested.`);
+    console.log(`🔥 (${req.ip}) requested '${key}' for user with ID ${id}.`);
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
   }
