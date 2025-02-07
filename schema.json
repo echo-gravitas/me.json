@@ -1,0 +1,71 @@
+{
+  "dob": "",
+  "mbti": "",
+  "email": [
+    {
+      "label": "",
+      "address": ""
+    }
+  ],
+  "links": [
+    {
+      "label": "",
+      "url": ""
+    }
+  ],
+  "phone": [
+    {
+      "label": "",
+      "number": ""
+    }
+  ],
+  "height": {
+    "unit": "",
+    "value": 0
+  },
+  "hobbies": [],
+  "children": 0,
+  "lastname": "",
+  "siblings": 0,
+  "bloodType": "",
+  "firstname": "",
+  "middlename": "",
+  "gravatarUrl": "",
+  "memberships": [
+    {
+      "society": "",
+      "position": ""
+    }
+  ],
+  "occupations": [
+    {
+      "to": "",
+      "from": "",
+      "current": false,
+      "employer": "",
+      "position": ""
+    }
+  ],
+  "citizenships": [""],
+  "usedPronouns": "",
+  "openGPGKeyUrl": "",
+  "postalAddress": {
+    "zip": "",
+    "city": "",
+    "state": "",
+    "country": "",
+    "address1": "",
+    "address2": ""
+  },
+  "genderIdentity": "",
+  "favouriteMovies": [],
+  "spokenLanguages": [
+    {
+      "proficiency": "",
+      "language": ""
+    }
+  ],
+  "biologicalGender": "",
+  "specialInterests": [],
+  "favouriteMusicGenres": []
+}
