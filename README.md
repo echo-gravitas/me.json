@@ -39,24 +39,56 @@ DB_PORT=your_database_port
 
 Ensure all required values are set correctly before running the application.
 
-## 📼 API Endpoints
+## 🎦 API Endpoints
 
 The **me.json** API provides the following endpoints to interact with user data:
 
 ### 🔍 Get User Data
 
-**GET /**
+#### **GET /**
 
 - Returns an error if no user ID is provided.
 - Example Response:
   ```json
   {
     "error": "Bad Request",
-    "details": "Please provide a user ID at least."
+    "details": "Please provide a user ID at least. Or request /users to get a list of all available user IDs."
   }
   ```
 
-**GET /:id**
+#### **GET /schema**
+
+- Retrieves the latest JSON schema used for me.json.
+- Example Request:
+  ```sh
+  curl -X GET http://localhost:3000/schema
+  ```
+- Example Response:
+  ```json
+  {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "email": { "type": "string" }
+    }
+  }
+  ```
+
+#### **GET /users**
+
+- Retrieves a list of all available user IDs.
+- Example Request:
+  ```sh
+  curl -X GET http://localhost:3000/users
+  ```
+- Example Response:
+  ```json
+  {
+    "userIDs": ["abc123", "xyz789"]
+  }
+  ```
+
+#### **GET /:id**
 
 - Retrieves the entire dataset for the specified user ID.
 - Example Request:
@@ -71,7 +103,7 @@ The **me.json** API provides the following endpoints to interact with user data:
   }
   ```
 
-**GET /:id/:key**
+#### **GET /:id/:key**
 
 - Retrieves a specific data field for the given user ID.
 - Example Request:
@@ -87,7 +119,36 @@ The **me.json** API provides the following endpoints to interact with user data:
 - If the key does not exist, returns an error:
   ```json
   {
-    "error": "Key 'email' not found for user 123."
+    "error": "The key 'email' doesn't exist in the dataset of user 123."
+  }
+  ```
+
+### 🛠️ Create a New User
+
+#### **POST /users**
+
+- Saves a new user profile in the database.
+- Example Request:
+  ```sh
+  curl -X POST http://localhost:3000/users \
+       -H "Content-Type: application/json" \
+       -d '{"name": "John Doe", "email": "john.doe@example.com"}'
+  ```
+- Example Response:
+  ```json
+  {
+    "id": "abc123",
+    "data": {
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    }
+  }
+  ```
+- If no JSON data is provided, returns an error:
+  ```json
+  {
+    "error": "Bad Request",
+    "details": "You have not provided any JSON payload."
   }
   ```
 
