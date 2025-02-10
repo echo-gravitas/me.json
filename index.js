@@ -75,7 +75,7 @@ app.get('/users', async (req, res) => {
 
     console.log(`🔥 ${req.ip} requested a list of all available user IDs.`);
     res.json({ userIDs });
-  } catch {
+  } catch (error) {
     console.error(`❌ Database error: ${error.message}`);
     res.status(500).json({ error: 'Database error', details: error.message });
   }
