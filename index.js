@@ -30,6 +30,27 @@ app.use(
 );
 
 /**
+ * Read JSON schema file and sanitize it
+ */
+const sanitizeJson = (data) => {
+  if (Array.isArray(data)) {
+    return data.length > 0 ? [sanitizeJson(data[0])] : [];
+  } else if (typeof data === 'object' && data !== null) {
+    let sanitized = {};
+    for (const key in data) {
+      sanitized[key] = sanitizeJson(data[key]);
+    }
+    return sanitized;
+  } else if (typeof data === 'string') {
+    return '';
+  } else if (typeof data === 'number') {
+    return 0;
+  } else {
+    return data;
+  }
+};
+
+/**
  * Root route: No user ID provided.
  */
 app.get('/', async (req, res) => {
@@ -50,8 +71,10 @@ app.get('/', async (req, res) => {
  */
 app.get('/schema', async (req, res) => {
   try {
-    console.log(`🔥 ${req.ip} requested the JSON schema.`);
-    res.json(schema);
+    const sanitizedData = sanitizeJson(schema);
+
+    console.log(`🔥 ${req.ip} requested the sanitized JSON schema.`);
+    res.json(sanitizedData);
   } catch (error) {
     res.status(500).json({ error: 'Could not send JSON schema.' });
   }
@@ -107,21 +130,6 @@ app.get('/:id', async (req, res) => {
 
 /**
  * Retrieves nested JSON data for a user based on a key path.
- * Examples:
- *   - GET /5Vv7P2q9ys8V_8iKrM1ir/career
- *       → returns { "career": { ... } }
- *   - GET /5Vv7P2q9ys8V_8iKrM1ir/career/current_positions
- *       → returns { "current_positions": [ ... ] }
- */
-/**
- * Retrieves nested JSON data for a user based on a key path.
- * Examples:
- *   - GET /5Vv7P2q9ys8V_8iKrM1ir/career
- *       → returns { "career": { ... } }
- *   - GET /5Vv7P2q9ys8V_8iKrM1ir/career/current_positions
- *       → returns { "current_positions": [ ... ] }
- *
- * This version distinguishes between non-existent key paths and existing key paths with null values.
  */
 app.get('/:id/*', async (req, res) => {
   try {
@@ -143,10 +151,8 @@ app.get('/:id/*', async (req, res) => {
         .json({ error: `User with ID ${id} does not exist.` });
     }
 
-    // Get the complete JSON object.
     let value = userResult.rows[0].data;
 
-    // Traverse the JSON object using the provided key path.
     for (const key of keys) {
       if (
         value !== null &&
@@ -164,7 +170,6 @@ app.get('/:id/*', async (req, res) => {
       }
     }
 
-    // Even if 'value' is null, the key path exists.
     const lastKey = keys[keys.length - 1];
     const responseData = { [lastKey]: value };
 
