@@ -101,8 +101,10 @@ app.get('/', async (req, res) => {
 app.get('/schema', (req, res) => {
   try {
     const schemaData = fs.readFileSync(SCHEMA_PATH, 'utf-8');
+    console.log(`🔥 ${req.ip} requested the schema JSON file.`);
     res.json(JSON.parse(schemaData));
   } catch (error) {
+    console.error(`❌ Could not send JSON schema.`);
     res.status(500).json({ error: 'Could not send JSON schema.' });
   }
 });
@@ -212,7 +214,7 @@ app.get('/:id/*', async (req, res) => {
 /**
  * Receives JSON from a form and saves it to the database.
  */
-app.post('/users', async (req, res) => {
+app.post('/add', async (req, res) => {
   try {
     const data = req.body;
 
@@ -228,7 +230,7 @@ app.post('/users', async (req, res) => {
     const query = `
       INSERT INTO users (id, data)
       VALUES ($1, $2)
-      RETURNING *
+      RETURNING id
     `;
     const result = await pool.query(query, [id, data]);
 

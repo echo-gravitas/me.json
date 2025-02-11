@@ -123,14 +123,14 @@ The **me.json** API provides the following endpoints to interact with user data:
   }
   ```
 
-### 🛠️ Create a New User
+### 🛠️ Add a New User
 
-#### **POST /users**
+#### **POST /add**
 
 - Saves a new user profile in the database.
 - Example Request:
   ```sh
-  curl -X POST http://localhost:3000/users \
+  curl -X POST http://localhost:3000/add \
        -H "Content-Type: application/json" \
        -d '{"name": "John Doe", "email": "john.doe@example.com"}'
   ```

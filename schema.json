@@ -8,13 +8,13 @@
     },
     "children": 0,
     "last_name": "",
-    "maiden_name": null,
+    "maiden_name": "",
     "civil_status": "",
     "siblings": 0,
     "blood_type": "",
     "first_name": "",
     "quote": "",
-    "middle_name": null,
+    "middle_name": "",
     "citizenships": [
       ""
     ],
@@ -41,7 +41,7 @@
       "state": "",
       "country": "",
       "address1": "",
-      "address2": null
+      "address2": ""
     },
     "pgp_public_key": ""
   },
@@ -86,7 +86,6 @@
       {
         "from": "",
         "to": "",
-        "current": false,
         "employer": "",
         "position": ""
       }
