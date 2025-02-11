@@ -3,13 +3,20 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import pkg from 'pg';
-import schema from './schema.json' with { type: 'json' };
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { nanoid } from 'nanoid';
 
 dotenv.config({ path: '.env' });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = process.env.PORT;
+const SCHEMA_PATH = path.join(__dirname, 'schema.json');
+const ME_JSON_PATH = path.join(__dirname, 'me.json');
 const { Pool } = pkg;
 
 const pool = new Pool({
@@ -50,6 +57,28 @@ const sanitizeJson = (data) => {
   }
 };
 
+const updateSchema = () => {
+  try {
+    if (fs.existsSync(ME_JSON_PATH)) {
+      const rawData = fs.readFileSync(ME_JSON_PATH, 'utf-8');
+      const parsedData = JSON.parse(rawData);
+      const sanitizedData = sanitizeJson(parsedData);
+      fs.writeFileSync(SCHEMA_PATH, JSON.stringify(sanitizedData, null, 2));
+      console.log('🔥 schema.json updated successfully.');
+    } else if (!fs.existsSync(SCHEMA_PATH)) {
+      console.error(
+        '❌ Neither me.json nor schema.json exists. Server shutting down.'
+      );
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error('❌ Error updating schema.json:', error.message);
+    process.exit(1);
+  }
+};
+
+updateSchema(); // Initial check and update before starting the server
+
 /**
  * Root route: No user ID provided.
  */
@@ -69,12 +98,10 @@ app.get('/', async (req, res) => {
 /**
  * Returns the latest me.json schema.
  */
-app.get('/schema', async (req, res) => {
+app.get('/schema', (req, res) => {
   try {
-    const sanitizedData = sanitizeJson(schema);
-
-    console.log(`🔥 ${req.ip} requested the sanitized JSON schema.`);
-    res.json(sanitizedData);
+    const schemaData = fs.readFileSync(SCHEMA_PATH, 'utf-8');
+    res.json(JSON.parse(schemaData));
   } catch (error) {
     res.status(500).json({ error: 'Could not send JSON schema.' });
   }
