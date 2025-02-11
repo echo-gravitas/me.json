@@ -234,7 +234,7 @@ app.post('/add', async (req, res) => {
     `;
     const result = await pool.query(query, [id, data]);
 
-    console.log(`🔥 New entry with ID ${id} created successfully.`);
+    console.log(`🔥 ${req.ip} successfully created a new entry with ID ${id}.`);
     res.status(201).json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ error: 'Database error', details: error.message });
