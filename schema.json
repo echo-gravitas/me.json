@@ -1,71 +1,103 @@
 {
-  "dob": "",
-  "mbti": "",
-  "email": [
-    {
-      "label": "",
-      "address": ""
-    }
-  ],
-  "links": [
+  "personal_info": {
+    "dob": "",
+    "mbti": "",
+    "height": {
+      "unit": "",
+      "value": 0
+    },
+    "children": 0,
+    "last_name": "",
+    "maiden_name": null,
+    "civil_status": "",
+    "siblings": 0,
+    "blood_type": "",
+    "first_name": "",
+    "quote": "",
+    "middle_name": null,
+    "citizenships": [
+      ""
+    ],
+    "preferred_pronouns": "",
+    "gender_identity": "",
+    "biological_gender": ""
+  },
+  "contact_info": {
+    "email": [
+      {
+        "label": "",
+        "address": ""
+      }
+    ],
+    "phone": [
+      {
+        "label": "",
+        "number": ""
+      }
+    ],
+    "postal_address": {
+      "zip": "",
+      "city": "",
+      "state": "",
+      "country": "",
+      "address1": "",
+      "address2": null
+    },
+    "pgp_public_key": ""
+  },
+  "interests": {
+    "hobbies": [
+      ""
+    ],
+    "special_interests": [
+      ""
+    ],
+    "favorite_movies": [
+      ""
+    ],
+    "favorite_artists": [
+      ""
+    ],
+    "favorite_music_genres": [
+      ""
+    ]
+  },
+  "online_profiles": [
     {
       "label": "",
       "url": ""
     }
   ],
-  "phone": [
-    {
-      "label": "",
-      "number": ""
-    }
-  ],
-  "height": {
-    "unit": "",
-    "value": 0
-  },
-  "hobbies": [],
-  "children": 0,
-  "lastname": "",
-  "siblings": 0,
-  "bloodType": "",
-  "firstname": "",
-  "middlename": "",
-  "gravatarUrl": "",
   "memberships": [
     {
-      "society": "",
-      "position": ""
+      "organization": "",
+      "role": ""
     }
   ],
-  "occupations": [
-    {
-      "to": "",
-      "from": "",
-      "current": false,
-      "employer": "",
-      "position": ""
-    }
-  ],
-  "citizenships": [""],
-  "usedPronouns": "",
-  "openGPGKeyUrl": "",
-  "postalAddress": {
-    "zip": "",
-    "city": "",
-    "state": "",
-    "country": "",
-    "address1": "",
-    "address2": ""
+  "career": {
+    "current_positions": [
+      {
+        "employer": "",
+        "position": "",
+        "since": ""
+      }
+    ],
+    "previous_positions": [
+      {
+        "from": "",
+        "to": "",
+        "current": false,
+        "employer": "",
+        "position": ""
+      }
+    ]
   },
-  "genderIdentity": "",
-  "favouriteMovies": [],
-  "spokenLanguages": [
-    {
-      "proficiency": "",
-      "language": ""
-    }
-  ],
-  "biologicalGender": "",
-  "specialInterests": [],
-  "favouriteMusicGenres": []
+  "skills": {
+    "languages": [
+      {
+        "proficiency": "",
+        "language": ""
+      }
+    ]
+  }
 }

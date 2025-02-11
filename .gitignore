@@ -1,6 +1,10 @@
+# IDE files and folders
 .idea
 node_modules
 *.code-workspace
 
-# Ignore environment files
+# Environment files
 .env*
+
+# Misc
+me.json
