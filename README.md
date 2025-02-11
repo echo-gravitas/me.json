@@ -52,7 +52,7 @@ The **me.json** API provides the following endpoints to interact with user data:
   ```json
   {
     "error": "Bad Request",
-    "details": "Please provide a user ID at least. Or request /users to get a list of all available user IDs."
+    "details": "Please provide at least a user ID, or request /users to get a list of available user IDs."
   }
   ```
 
@@ -103,9 +103,9 @@ The **me.json** API provides the following endpoints to interact with user data:
   }
   ```
 
-#### **GET /:id/:key**
+#### **GET /:id/\* (Nested Data Retrieval)**
 
-- Retrieves a specific data field for the given user ID.
+- Retrieves a specific data field for the given user ID using a key path.
 - Example Request:
   ```sh
   curl -X GET http://localhost:3000/123/email
@@ -119,7 +119,7 @@ The **me.json** API provides the following endpoints to interact with user data:
 - If the key does not exist, returns an error:
   ```json
   {
-    "error": "The key 'email' doesn't exist in the dataset of user 123."
+    "error": "The key path 'email' does not exist in user 123's data."
   }
   ```
 
@@ -148,7 +148,7 @@ The **me.json** API provides the following endpoints to interact with user data:
   ```json
   {
     "error": "Bad Request",
-    "details": "You have not provided any JSON payload."
+    "details": "No JSON payload provided."
   }
   ```
 
