@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "me.json",
+      name: "me.json Server",
       script: "./index.js",
       watch: true,
       env: {
