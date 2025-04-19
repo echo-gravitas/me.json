@@ -1,6 +1,6 @@
 {
   "name": "me.json",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "A simple API that serves values from a me.json file based on a NanoID. The idea is to provide a centralized repository for non-sensitive personal data as a single source of truth.",
   "homepage": "https://github.com/echo-gravitas/me-json#readme",
   "bugs": {
