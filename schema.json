@@ -79,7 +79,8 @@
       {
         "employer": "",
         "position": "",
-        "since": ""
+        "from": "",
+        "to": ""
       }
     ],
     "previous_positions": [
@@ -97,6 +98,29 @@
         "proficiency": "",
         "language": ""
       }
-    ]
+    ],
+    "technical": {
+      "programming_languages": [
+        ""
+      ],
+      "frameworks": [
+        ""
+      ],
+      "cloud_platforms": [
+        ""
+      ],
+      "scripting_languages": [
+        ""
+      ],
+      "markup_styles": [
+        ""
+      ],
+      "databases": [
+        ""
+      ],
+      "ux_ui": [
+        ""
+      ]
+    }
   }
 }
