@@ -7,10 +7,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { nanoid } from "nanoid";
+import logger from "./logger.js";
 
-// TODO: Implememt logging library
+// Dynamically select the correct .env file based on NODE_ENV
+const envFile =
+  process.env.NODE_ENV === "production"
+    ? ".env.production"
+    : process.env.NODE_ENV === "test"
+      ? ".env.test"
+      : ".env.development";
 
-dotenv.config({ path: ".env" });
+dotenv.config({ path: envFile });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -67,15 +74,15 @@ const updateSchema = () => {
       const parsedData = JSON.parse(rawData);
       const sanitizedData = sanitizeJson(parsedData);
       fs.writeFileSync(SCHEMA_PATH, JSON.stringify(sanitizedData, null, 2));
-      console.log("🔥 schema.json updated successfully.");
+      logger.info("🔥 schema.json updated successfully.");
     } else if (!fs.existsSync(SCHEMA_PATH)) {
-      console.error(
+      logger.error(
         "❌ Neither me.json nor schema.json exists. Server shutting down.",
       );
       process.exit(1);
     }
   } catch (error) {
-    console.error("❌ Error updating schema.json:", error.message);
+    logger.error("❌ Error updating schema.json: %s", error.message);
     process.exit(1);
   }
 };
@@ -87,7 +94,7 @@ updateSchema(); // Initial check and update before starting the server
  */
 app.get("/", async (req, res) => {
   try {
-    console.log(
+    logger.warn(
       `❌ ${req.headers["x-forwarded-for"] || req.ip} did not provide a user ID.`,
     );
     res.status(400).json({
@@ -96,6 +103,7 @@ app.get("/", async (req, res) => {
         "Please provide at least a user ID, or request /users to get a list of available user IDs.",
     });
   } catch (error) {
+    logger.error("Database error: %s", error.message);
     res.status(500).json({ error: "Database error", details: error.message });
   }
 });
@@ -106,12 +114,12 @@ app.get("/", async (req, res) => {
 app.get("/schema", (req, res) => {
   try {
     const schemaData = fs.readFileSync(SCHEMA_PATH, "utf-8");
-    console.log(
+    logger.info(
       `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the schema JSON file.`,
     );
     res.json(JSON.parse(schemaData));
   } catch (error) {
-    console.error("❌ Could not send JSON schema.");
+    logger.error("❌ Could not send JSON schema.");
     res.status(500).json({ error: "Could not send JSON schema." });
   }
 });
@@ -127,12 +135,12 @@ app.get("/users", async (req, res) => {
     `;
     const result = await pool.query(query);
     const userIDs = result.rows.map((row) => row.id);
-    console.log(
+    logger.info(
       `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the list of all available user IDs.`,
     );
     res.json({ userIDs });
   } catch (error) {
-    console.error(`❌ Database error: ${error.message}`);
+    logger.error(`❌ Database error: ${error.message}`);
     res.status(500).json({ error: "Database error", details: error.message });
   }
 });
@@ -151,7 +159,7 @@ app.get("/:id", async (req, res) => {
     const result = await pool.query(query, [id]);
 
     if (result.rows.length === 0) {
-      console.log(
+      logger.warn(
         `❌ ${req.headers["x-forwarded-for"] || req.ip} requested data for non-existent user with ID ${id}.`,
       );
       return res
@@ -159,11 +167,12 @@ app.get("/:id", async (req, res) => {
         .json({ error: `User with ID ${id} does not exist.` });
     }
 
-    console.log(
+    logger.info(
       `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the dataset for user with ID ${id}.`,
     );
     res.json(result.rows[0].data);
   } catch (error) {
+    logger.error("Database error: %s", error.message);
     res.status(500).json({ error: "Database error", details: error.message });
   }
 });
@@ -217,7 +226,7 @@ app.get("/:id/*", async (req, res) => {
     const userResult = await pool.query(userQuery, [id]);
 
     if (userResult.rows.length === 0) {
-      console.log(
+      logger.warn(
         `❌ ${req.headers["x-forwarded-for"] || req.ip} requested data for non-existent user with ID ${id}.`,
       );
       return res
@@ -231,7 +240,7 @@ app.get("/:id/*", async (req, res) => {
     );
 
     if (error) {
-      console.log(
+      logger.warn(
         `❌ ${req.headers["x-forwarded-for"] || req.ip} requested invalid key path '${keyPath}' for user ${id}: ${error}`,
       );
       return res.status(404).json({
@@ -244,11 +253,12 @@ app.get("/:id/*", async (req, res) => {
     const lastKey = keys.length > 0 ? keys[keys.length - 1] : undefined;
     const responseData = lastKey ? { [lastKey]: value } : value;
 
-    console.log(
+    logger.info(
       `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested key path '${keyPath}' for user with ID ${id}.`,
     );
     res.json(responseData);
   } catch (error) {
+    logger.error("Database error: %s", error.message);
     res.status(500).json({ error: "Database error", details: error.message });
   }
 });
@@ -276,11 +286,12 @@ app.post("/add", async (req, res) => {
     `;
     const result = await pool.query(query, [id, data]);
 
-    console.log(
+    logger.info(
       `🔥 ${req.headers["x-forwarded-for"] || req.ip} successfully created a new entry with ID ${id}.`,
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    logger.error("Database error: %s", error.message);
     res.status(500).json({ error: "Database error", details: error.message });
   }
 });
@@ -290,7 +301,7 @@ app.post("/add", async (req, res) => {
  */
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
-    console.log(
+    logger.info(
       `🚀 API is running on http://localhost:${process.env.PORT} in ${process.env.NODE_ENV} mode`,
     );
   });
