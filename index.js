@@ -47,7 +47,10 @@ app.use(
 );
 
 /**
- * Read JSON schema file and sanitize it
+ * Recursively sanitizes a JSON object by replacing all string values with empty strings,
+ * all numbers with 0, and preserving the structure. Used to generate a schema template.
+ * @param {any} data - The JSON data to sanitize.
+ * @returns {any} The sanitized JSON object.
  */
 const sanitizeJson = (data) => {
   if (Array.isArray(data)) {
@@ -67,6 +70,10 @@ const sanitizeJson = (data) => {
   }
 };
 
+/**
+ * Updates the schema.json file by sanitizing the me.json file.
+ * If neither file exists, logs an error and exits the process.
+ */
 const updateSchema = () => {
   try {
     if (fs.existsSync(ME_JSON_PATH)) {
@@ -90,7 +97,11 @@ const updateSchema = () => {
 updateSchema(); // Initial check and update before starting the server
 
 /**
- * Root route: No user ID provided.
+ * Root route handler.
+ * Returns a 400 error if no user ID is provided.
+ * @route GET /
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get("/", async (req, res) => {
   try {
@@ -110,6 +121,9 @@ app.get("/", async (req, res) => {
 
 /**
  * Returns the latest me.json schema.
+ * @route GET /schema
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get("/schema", (req, res) => {
   try {
@@ -126,6 +140,9 @@ app.get("/schema", (req, res) => {
 
 /**
  * Retrieves and displays all user IDs in the database.
+ * @route GET /users
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get("/users", async (req, res) => {
   try {
@@ -147,6 +164,9 @@ app.get("/users", async (req, res) => {
 
 /**
  * Retrieves JSON data for a specific user.
+ * @route GET /:id
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get("/:id", async (req, res) => {
   try {
@@ -178,9 +198,12 @@ app.get("/:id", async (req, res) => {
 });
 
 /**
- * Helper function to safely traverse a nested object using a key path.
- * Supports array access (e.g., /foo/bar/0) and filters out empty keys.
- * Returns { value, error }.
+ * Safely traverses a nested object using a key path (e.g., "foo/bar/0").
+ * Supports array access and filters out empty keys.
+ * @param {object|array} obj - The object or array to traverse.
+ * @param {string} keyPath - The key path, separated by slashes.
+ * @param {number} [maxDepth=10] - Maximum allowed depth for traversal.
+ * @returns {{ value?: any, error?: string }} The value at the key path, or an error message.
  */
 const getValueByKeyPath = (obj, keyPath, maxDepth = 10) => {
   if (!keyPath) return { error: "No key path provided." };
@@ -215,6 +238,9 @@ const getValueByKeyPath = (obj, keyPath, maxDepth = 10) => {
 
 /**
  * Retrieves nested JSON data for a user based on a key path.
+ * @route GET /:id/*
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.get("/:id/*", async (req, res) => {
   try {
@@ -265,6 +291,9 @@ app.get("/:id/*", async (req, res) => {
 
 /**
  * Receives JSON from a form and saves it to the database.
+ * @route POST /add
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
  */
 app.post("/add", async (req, res) => {
   try {
@@ -298,6 +327,7 @@ app.post("/add", async (req, res) => {
 
 /**
  * Starts the server and listens on the specified port.
+ * Only runs if not in test mode.
  */
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
@@ -307,4 +337,5 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
+export { app, pool };
 export default app;
