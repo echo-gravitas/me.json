@@ -103,6 +103,7 @@ updateSchema(); // Initial check and update before starting the server
  * @param {express.Request} req - The request object.
  * @param {express.Response} res - The response object.
  */
+// TEST: Done
 app.get("/", async (req, res) => {
   try {
     logger.warn(
@@ -125,6 +126,7 @@ app.get("/", async (req, res) => {
  * @param {express.Request} req - The request object.
  * @param {express.Response} res - The response object.
  */
+// TEST: Done
 app.get("/schema", (req, res) => {
   try {
     const schemaData = fs.readFileSync(SCHEMA_PATH, "utf-8");
@@ -144,6 +146,7 @@ app.get("/schema", (req, res) => {
  * @param {express.Request} req - The request object.
  * @param {express.Response} res - The response object.
  */
+// TEST: Done
 app.get("/users", async (req, res) => {
   try {
     const query = `
@@ -168,6 +171,7 @@ app.get("/users", async (req, res) => {
  * @param {express.Request} req - The request object.
  * @param {express.Response} res - The response object.
  */
+// TEST: Done
 app.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -242,6 +246,7 @@ const getValueByKeyPath = (obj, keyPath, maxDepth = 10) => {
  * @param {express.Request} req - The request object.
  * @param {express.Response} res - The response object.
  */
+// TEST: Done
 app.get("/:id/*", async (req, res) => {
   try {
     const { id } = req.params;
@@ -295,6 +300,7 @@ app.get("/:id/*", async (req, res) => {
  * @param {express.Request} req - The request object.
  * @param {express.Response} res - The response object.
  */
+// TEST: Done
 app.post("/add", async (req, res) => {
   try {
     const data = req.body;
