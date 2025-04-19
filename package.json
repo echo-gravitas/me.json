@@ -18,7 +18,8 @@
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "engines": {
     "node": "^23.7.0"
@@ -29,13 +30,15 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "helmet": "^8.0.0",
+    "helmet": "^8.1.0",
     "jsonfile": "^6.1.0",
-    "nanoid": "^5.0.9",
-    "pg": "^8.13.1"
+    "nanoid": "^5.1.5",
+    "pg": "^8.14.1"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.1.9",
-    "prettier": "^3.4.2"
+    "prettier": "^3.5.3",
+    "supertest": "^7.1.0"
   }
 }
