@@ -81,10 +81,10 @@ const updateSchema = () => {
       const parsedData = JSON.parse(rawData);
       const sanitizedData = sanitizeJson(parsedData);
       fs.writeFileSync(SCHEMA_PATH, JSON.stringify(sanitizedData, null, 2));
-      logger.info("🔥 schema.json updated successfully.");
+      logger.info("🔥 schema.json updated successfully");
     } else if (!fs.existsSync(SCHEMA_PATH)) {
       logger.error(
-        "❌ Neither me.json nor schema.json exists. Server shutting down.",
+        "❌ Neither me.json nor schema.json exists. Server shutting down",
       );
       process.exit(1);
     }
@@ -106,12 +106,12 @@ updateSchema(); // Initial check and update before starting the server
 app.get("/", async (req, res) => {
   try {
     logger.warn(
-      `❌ ${req.headers["x-forwarded-for"] || req.ip} did not provide a user ID.`,
+      `❌ ${req.headers["x-forwarded-for"] || req.ip} did not provide a user ID`,
     );
     res.status(400).json({
       error: "Bad Request",
       details:
-        "Please provide at least a user ID, or request /users to get a list of available user IDs.",
+        "Please provide at least a user ID, or request /users to get a list of available user IDs",
     });
   } catch (error) {
     logger.error("Database error: %s", error.message);
@@ -129,12 +129,12 @@ app.get("/schema", (req, res) => {
   try {
     const schemaData = fs.readFileSync(SCHEMA_PATH, "utf-8");
     logger.info(
-      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the schema JSON file.`,
+      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the schema JSON file`,
     );
     res.json(JSON.parse(schemaData));
   } catch (error) {
-    logger.error("❌ Could not send JSON schema.");
-    res.status(500).json({ error: "Could not send JSON schema." });
+    logger.error("❌ Could not send JSON schema");
+    res.status(500).json({ error: "Could not send JSON schema" });
   }
 });
 
@@ -153,7 +153,7 @@ app.get("/users", async (req, res) => {
     const result = await pool.query(query);
     const userIDs = result.rows.map((row) => row.id);
     logger.info(
-      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the list of all available user IDs.`,
+      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the list of all available user IDs`,
     );
     res.json({ userIDs });
   } catch (error) {
@@ -180,15 +180,15 @@ app.get("/:id", async (req, res) => {
 
     if (result.rows.length === 0) {
       logger.warn(
-        `❌ ${req.headers["x-forwarded-for"] || req.ip} requested data for non-existent user with ID ${id}.`,
+        `❌ ${req.headers["x-forwarded-for"] || req.ip} requested data for non-existent user with ID ${id}`,
       );
       return res
         .status(404)
-        .json({ error: `User with ID ${id} does not exist.` });
+        .json({ error: `User with ID ${id} does not exist` });
     }
 
     logger.info(
-      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the dataset for user with ID ${id}.`,
+      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested the dataset for user with ID ${id}`,
     );
     res.json(result.rows[0].data);
   } catch (error) {
@@ -206,12 +206,12 @@ app.get("/:id", async (req, res) => {
  * @returns {{ value?: any, error?: string }} The value at the key path, or an error message.
  */
 const getValueByKeyPath = (obj, keyPath, maxDepth = 10) => {
-  if (!keyPath) return { error: "No key path provided." };
+  if (!keyPath) return { error: "No key path provided" };
   const keys = keyPath.split("/").filter((k) => !!k);
 
-  if (keys.length === 0) return { error: "No key path provided." };
+  if (keys.length === 0) return { error: "No key path provided" };
   if (keys.length > maxDepth)
-    return { error: `Key path too deep (max ${maxDepth}).` };
+    return { error: `Key path too deep (max ${maxDepth})` };
 
   let value = obj;
   for (let i = 0; i < keys.length; i++) {
@@ -221,7 +221,7 @@ const getValueByKeyPath = (obj, keyPath, maxDepth = 10) => {
       if (idx < value.length) {
         value = value[idx];
       } else {
-        return { error: `Array index '${key}' out of bounds.` };
+        return { error: `Array index '${key}' out of bounds` };
       }
     } else if (
       value !== null &&
@@ -230,7 +230,7 @@ const getValueByKeyPath = (obj, keyPath, maxDepth = 10) => {
     ) {
       value = value[key];
     } else {
-      return { error: `Key '${key}' does not exist.` };
+      return { error: `Key '${key}' does not exist` };
     }
   }
   return { value };
@@ -253,11 +253,11 @@ app.get("/:id/*", async (req, res) => {
 
     if (userResult.rows.length === 0) {
       logger.warn(
-        `❌ ${req.headers["x-forwarded-for"] || req.ip} requested data for non-existent user with ID ${id}.`,
+        `❌ ${req.headers["x-forwarded-for"] || req.ip} requested data for non-existent user with ID ${id}`,
       );
       return res
         .status(404)
-        .json({ error: `User with ID ${id} does not exist.` });
+        .json({ error: `User with ID ${id} does not exist` });
     }
 
     const { value, error } = getValueByKeyPath(
@@ -278,9 +278,8 @@ app.get("/:id/*", async (req, res) => {
     const keys = keyPath.split("/").filter(Boolean);
     const lastKey = keys.length > 0 ? keys[keys.length - 1] : undefined;
     const responseData = lastKey ? { [lastKey]: value } : value;
-
     logger.info(
-      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested key path '${keyPath}' for user with ID ${id}.`,
+      `🔥 ${req.headers["x-forwarded-for"] || req.ip} requested key path '${keyPath}' for user with ID ${id}`,
     );
     res.json(responseData);
   } catch (error) {
@@ -302,7 +301,7 @@ app.post("/add", async (req, res) => {
     if (!data) {
       return res.status(400).json({
         error: "Bad Request",
-        details: "No JSON payload provided.",
+        details: "No JSON payload provided",
       });
     }
 
@@ -316,7 +315,7 @@ app.post("/add", async (req, res) => {
     const result = await pool.query(query, [id, data]);
 
     logger.info(
-      `🔥 ${req.headers["x-forwarded-for"] || req.ip} successfully created a new entry with ID ${id}.`,
+      `🔥 ${req.headers["x-forwarded-for"] || req.ip} successfully created a new entry with ID ${id}`,
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -332,7 +331,7 @@ app.post("/add", async (req, res) => {
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
     logger.info(
-      `🚀 API is running on http://localhost:${process.env.PORT} in ${process.env.NODE_ENV} mode`,
+      `🚀 API is running on ${process.env.PORT} in ${process.env.NODE_ENV} mode`,
     );
   });
 }
