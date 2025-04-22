@@ -3,9 +3,13 @@ module.exports = {
     {
       name: "me.json Server",
       script: "./index.js",
-      watch: true,
-      env: {
+      env_development: {
+        NODE_ENV: "development",
+        watch: ["index.js", "logger.js", "me.json"],
+      },
+      env_production: {
         NODE_ENV: "production",
+        watch: false,
       },
     },
   ],
