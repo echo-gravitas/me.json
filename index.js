@@ -238,14 +238,21 @@ const getValueByKeyPath = (obj, keyPath, maxDepth = 10) => {
 
 /**
  * Retrieves nested JSON data for a user based on a key path.
+ * The user ID is extracted from `req.params.id`.
+ * The key path is extracted from `req.params.path` (or `req.params[0]` in some Express versions).
  * @route GET /:id/*
- * @param {express.Request} req - The request object.
+ * @param {express.Request} req - The request object, containing `id` and `path` in `req.params`.
  * @param {express.Response} res - The response object.
  */
-app.get('/:id/*', async (req, res) => {
+app.get('/:id{/*path}', async (req, res) => {
   try {
     const { id } = req.params;
-    const keyPath = req.params['0'];
+    let keyPath = req.params.path;
+
+    // Express v5: keyPath is now an array if the route uses a splat/wildcard
+    if (Array.isArray(keyPath)) {
+      keyPath = keyPath.join('/');
+    }
 
     // Check if the user exists by fetching the entire JSON data.
     const userQuery = 'SELECT data FROM users WHERE id = $1';
@@ -275,7 +282,7 @@ app.get('/:id/*', async (req, res) => {
     }
 
     // Respond with the last key and its value, or the value itself if it's a primitive/array/object
-    const keys = keyPath.split('/').filter(Boolean);
+    const keys = keyPath ? keyPath.split('/').filter(Boolean) : [];
     const lastKey = keys.length > 0 ? keys[keys.length - 1] : undefined;
     const responseData = lastKey ? { [lastKey]: value } : value;
     logger.info(
@@ -289,9 +296,9 @@ app.get('/:id/*', async (req, res) => {
 });
 
 /**
- * Receives JSON from a form and saves it to the database.
+ * Receives a JSON payload and saves it to the database with a new unique ID.
  * @route POST /add
- * @param {express.Request} req - The request object.
+ * @param {express.Request} req - The request object, containing the JSON payload in `req.body`.
  * @param {express.Response} res - The response object.
  */
 app.post('/add', async (req, res) => {
